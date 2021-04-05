@@ -1,4 +1,6 @@
 {
+    "editor.rulers": [70
+    ],
     "files.associations": {
         "ostream": "cpp",
         "iostream": "cpp",
