@@ -560,10 +560,6 @@ int main()
       myLTI.fileWrite.close();
       return 0;
     }
-    else
-    {
-      cout << "Something went wrong! R.I.P. program" <<endl;
-    }
   }
 }
 
