@@ -9,14 +9,17 @@ using namespace std;
 class LTI {
     public:
       int countRecursive = 0, countNonRecursive = 0, signalsIndex = 0, choice;
-      int prevValue = 0;
+      int prevValue = 0, counterOutput = 0;
       bool full = 0;
       vector<double> aCoeff, bCoeff, input, output;
+      string FN;
+      ofstream fileWrite;
 
       void extractLTI();
       void userInput();
       vector<double> inputSignal();
       void computeOutput();
+      void OpenLog();
       void FileWrite();
       void PrintSpecs();
       void Menu();
@@ -57,8 +60,10 @@ void LTI::extractLTI() //extract LTI Specs
   //clear when load new LTI specs
   countNonRecursive = 0;
   countRecursive = 0;
+  counterOutput = 0;
   aCoeff.clear();
   bCoeff.clear();
+  fileWrite.close();
   clearMem();
 
   string signalText, tempString, fileName;
@@ -271,7 +276,7 @@ void LTI::Menu() // this might not be here supposedly, just here for testing pur
    << "\n[3] Specify the input file"
    << "\n[4] Specify the next input interactively"
    << "\n[5] Clear the application of previous inputs and outputs to 0"
-   << "\n[6] Print Data onto log file"
+   << "\n[6] Specify log file"
    << "\n[7] Terminate the application"
    << "\nSelection: ";
    getline(cin, temp);
@@ -302,9 +307,8 @@ void LTI::PrintData() //same here
   cout <<endl;
 }
 
-void LTI::FileWrite() //file write function
+void LTI::OpenLog()
 {
-  string FN;
   bool validName = true;
 
   vector<string> illegalCharacters;
@@ -342,15 +346,29 @@ void LTI::FileWrite() //file write function
     }
     FN += ".log";
   }
+}
 
-  ofstream fileWrite(FN.c_str(), ios::out);
+void LTI::FileWrite() //file write function
+{
+  if(fileWrite.is_open())
+  {
+    for (int i = counterOutput; i<output.size(); i++)
+    {
+      fileWrite << output[i] <<endl;
+    }
+    counterOutput = output.size();
+  }
+  else if (!FN.empty())
+  {
+    ofstream fileWrite(FN.c_str(), ios::out);
 
-  fileWrite << 0 << " ";
-  for(int i=countRecursive -1; i<output.size(); i++)
+    fileWrite << 0 << " ";
+    for(int i=countRecursive -1; i<output.size(); i++)
     {
       fileWrite << output[i] << endl;
     }
-  fileWrite.close();
+    counterOutput = output.size();
+  }
 }
 
 void LTI::PrintSpecs() //this can probably be improved
@@ -438,6 +456,7 @@ int main()
       cout << "Accepting input Signal..." <<endl;
       sample.inputSignal();
       sample.computeOutput();
+      sample.FileWrite();
       sample.prevValue = sample.output.size() - sample.countRecursive + 1;
     }
     else if (sample.choice == 4)
@@ -445,6 +464,7 @@ int main()
       cout << "Accepting Input INTERACTIVELY..." <<endl;
       sample.userInput();
       sample.computeOutput();
+      sample.FileWrite();
       sample.prevValue = sample.output.size() - sample.countRecursive + 1;
     }
     else if (sample.choice == 5)
@@ -464,12 +484,15 @@ int main()
     }
     else if (sample.choice == 6)
     {
-      //Printing results onto log file
+      //Open log file and writes output in memory
+      sample.fileWrite.close();
+      sample.OpenLog();
       sample.FileWrite();
     }
     else if (sample.choice == 7)
     {
       cout << "Exiting application..." <<endl;
+      sample.fileWrite.close();
       return 0;
     }
     else
