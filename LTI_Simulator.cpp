@@ -8,7 +8,8 @@ using namespace std;
 
 class LTI {
   public:
-    int countRecursive = 0, countNonRecursive = 0, signalsIndex = 0, choice;
+    int countRecursive = 0, countNonRecursive = 0, signalsIndex = 0;
+    int choice;
     int prevValue = 0, counterOutput = 0;
     bool full = 0;
     vector<double> aCoeff, bCoeff, input, output;
@@ -90,7 +91,8 @@ void LTI::extractLTI() //extract LTI Specs
       {
         ss << signalText;
         ss >> tempString;
-        if(!isInt(tempString, countNonRecursive) || countNonRecursive < 1)
+        if(!isInt(tempString, countNonRecursive) 
+        || countNonRecursive < 1)
         {
           cout << "Invalid LTI File!" <<endl;
           signalFile.close();
@@ -121,7 +123,8 @@ void LTI::extractLTI() //extract LTI Specs
         ss2 >> tempString;
         ss2.clear();
 
-        if (isDouble(tempString, tempDouble) && counter < countNonRecursive)
+        if (isDouble(tempString, tempDouble) && 
+        counter < countNonRecursive)
         {
           bCoeff.push_back(tempDouble);
         }
@@ -147,7 +150,7 @@ void LTI::extractLTI() //extract LTI Specs
   }
 }
 
-void LTI::userInput() //changed to one by one input
+void LTI::userInput() //One by one user input
 {
   string tempString;
   bool valid = 0;
@@ -169,7 +172,7 @@ void LTI::userInput() //changed to one by one input
   }
 }
 
-vector<double> LTI::inputSignal() //might change return type later
+vector<double> LTI::inputSignal() 
 {
   string signalText, tempString, fileName;
   stringstream ss, ss2;
@@ -252,7 +255,8 @@ vector<double> LTI::inputSignal() //might change return type later
 
 void LTI::computeOutput() //computing y values
 {
-  for (int i = prevValue; i<=input.size() - countNonRecursive; i++) //each y signal output
+  for (int i = prevValue; i<=input.size() - countNonRecursive; i++) 
+  //each y signal output
   {
     double sum = 0, sum2 = 0;
     for (int j = 0, k = aCoeff.size() - 1; j<aCoeff.size(); j++, k--)
@@ -267,16 +271,19 @@ void LTI::computeOutput() //computing y values
   }
 }
 
-void LTI::Menu() // this might not be here supposedly, just here for testing purposes
+void LTI::Menu() 
+
 {
   string temp;
   
    cout << "Select from the following";
-   cout << "\n[1] Load a file containing specifications for an LTI system"
+   cout << "\n[1] Load a file containing specifications" <<
+   " for an LTI system"
    << "\n[2] View the full details of the system"
    << "\n[3] Specify the input file"
    << "\n[4] Specify the next input interactively"
-   << "\n[5] Clear the application of previous inputs and outputs to 0"
+   << "\n[5] Clear the application of previous inputs and outputs"<<
+   " to 0"
    << "\n[6] Specify log file"
    << "\n[7] Terminate the application"
    << "\nSelection: ";
@@ -288,7 +295,8 @@ void LTI::Menu() // this might not be here supposedly, just here for testing pur
    }
    else if(choice <=0 || choice > 7)
    {
-      cout << "Choice " << choice << " is out of range! Try again" <<endl;
+      cout << "Choice " << choice << " is out of range! Try again" <<
+      endl;
       Menu();
    }
 }
@@ -312,7 +320,8 @@ void LTI::subMenu()
     }
     else if(subChoice <=0 || subChoice > 2)
     {
-        cout << "Choice " << choice << " is out of range! Try again" <<endl;
+        cout << "Choice " << choice << " is out of range! Try again" 
+        <<endl;
         subMenu();
     }
 
@@ -331,17 +340,19 @@ void LTI::subMenu()
   }
 }
 
-void LTI::PrintData() //same here
+void LTI::PrintData() 
 {
   if (full)
   {
     cout << "Input: " <<endl;
-    for (int i = countNonRecursive -1, j = 0; i < input.size(); i++, j++)
+    for (int i = countNonRecursive -1, j = 0; i < input.size(); i++, 
+    j++)
     {
       cout << "x(" << j << ")\t" << input[i] << endl;
     }
     cout << "\nOutput: " <<endl;
-    for (int i = countRecursive -1, j = 0; i < output.size(); i++, j++)
+    for (int i = countRecursive -1, j = 0; i < output.size(); i++, 
+    j++)
     {
       cout << "y(" << j << ")\t" << output[i] << endl;
     }
@@ -350,7 +361,8 @@ void LTI::PrintData() //same here
   else
   {
     cout << "\nOutput: " <<endl;
-    for (int i = prevValue + countRecursive -1, j = prevValue; i < output.size(); i++, j++)
+    for (int i = prevValue + countRecursive -1, j = prevValue; 
+    i < output.size(); i++, j++)
     {
       cout << "y(" << j << ")\t" << output[i] << endl;
     }
@@ -395,7 +407,6 @@ void LTI::OpenLog()
         validName = true;
       }
     }
-    FN += ".log";
   }
 }
 
@@ -422,7 +433,7 @@ void LTI::FileWrite() //file write function
   }
 }
 
-void LTI::PrintSpecs() //this can probably be improved
+void LTI::PrintSpecs() 
 {
   if (!full)
   {
@@ -484,7 +495,8 @@ int main()
 
   while (active)
   {
-    if(myLTI.choice !=2) //prevent double print, might move within menu after discussion
+    if(myLTI.choice !=2) 
+    //prevent double print
     {
       myLTI.PrintSpecs();
     }
@@ -509,7 +521,7 @@ int main()
       myLTI.computeOutput();
       myLTI.subMenu();
       myLTI.FileWrite();
-      myLTI.prevValue = myLTI.output.size() - myLTI.countRecursive + 1;
+      myLTI.prevValue= myLTI.output.size() - myLTI.countRecursive + 1;
     }
     else if (myLTI.choice == 4)
     {
@@ -518,7 +530,7 @@ int main()
       myLTI.computeOutput();
       myLTI.subMenu();
       myLTI.FileWrite();
-      myLTI.prevValue = myLTI.output.size() - myLTI.countRecursive + 1;
+      myLTI.prevValue= myLTI.output.size() - myLTI.countRecursive + 1;
     }
     else if (myLTI.choice == 5)
     {
@@ -526,7 +538,7 @@ int main()
       cout << "Clearing previous input/output values..." <<endl;
       myLTI.clearMem();
       //initialize necessary previous values to 0
-      for (int i = 1; i<myLTI.countNonRecursive; i++) //might move these to separate method
+      for (int i = 1; i<myLTI.countNonRecursive; i++) 
       {
         myLTI.input.push_back(0);
       }
