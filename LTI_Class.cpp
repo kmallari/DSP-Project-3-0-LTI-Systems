@@ -530,7 +530,7 @@ int main()
       {
         sample.input.push_back(0);
       }
-      for (int i = 0; i<sample.countRecursive; i++)
+      for (int i = 1; i<sample.countRecursive; i++)
       {
         sample.output.push_back(0);
       }
