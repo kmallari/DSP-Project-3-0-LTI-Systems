@@ -6,7 +6,8 @@
 
 using namespace std;
 
-class LTI {
+class LTI 
+{
   public:
     int countRecursive = 0, countNonRecursive = 0, signalsIndex = 0;
     int choice;
@@ -272,7 +273,6 @@ void LTI::computeOutput() //computing y values
 }
 
 void LTI::Menu() 
-
 {
   string temp;
   
@@ -390,7 +390,8 @@ void LTI::OpenLog()
   while(validName){
     cout << "File Name of Output Log file:";
     getline(cin, FN);
-    for (int i = 0; i < illegalCharacters.size(); i++){
+    for (int i = 0; i < illegalCharacters.size(); i++)
+    {
       if (FN.find(illegalCharacters.at(i)) != string::npos)
       {
         validName = false;
