@@ -23,6 +23,7 @@ class LTI {
       void FileWrite();
       void PrintSpecs();
       void Menu();
+      void subMenu();
       void clearMem();
       void PrintData();
 };
@@ -292,19 +293,69 @@ void LTI::Menu() // this might not be here supposedly, just here for testing pur
    }
 }
 
+void LTI::subMenu()
+{
+  if (fileWrite.is_open())
+  {
+    string temp;
+    int subChoice;
+    
+    cout << "Print the output data on screen?";
+    cout << "\n[1] Yes"
+    << "\n[2] No"
+    << "\nSelection: ";
+    getline(cin, temp);
+    if(!isInt(temp, subChoice))
+    {
+        cout << "Invalid Input! Please try again" <<endl;
+        subMenu();
+    }
+    else if(subChoice <=0 || subChoice > 2)
+    {
+        cout << "Choice " << choice << " is out of range! Try again" <<endl;
+        subMenu();
+    }
+
+    if (subChoice == 1)
+    {
+      PrintData();
+    }
+    else
+    {
+      cout << endl;
+    }
+  }
+  else
+  {
+    PrintData();
+  }
+}
+
 void LTI::PrintData() //same here
 {
-  cout << "Input: " <<endl;
-  for (int i = countNonRecursive -1, j = 0; i < input.size(); i++, j++)
+  if (full)
   {
-    cout << "x(" << j << ")\t" << input[i] << endl;
+    cout << "Input: " <<endl;
+    for (int i = countNonRecursive -1, j = 0; i < input.size(); i++, j++)
+    {
+      cout << "x(" << j << ")\t" << input[i] << endl;
+    }
+    cout << "\nOutput: " <<endl;
+    for (int i = countRecursive -1, j = 0; i < output.size(); i++, j++)
+    {
+      cout << "y(" << j << ")\t" << output[i] << endl;
+    }
+    cout <<endl;
   }
-  cout << "\nOutput: " <<endl;
-  for (int i = countRecursive -1, j = 0; i < output.size(); i++, j++)
+  else
   {
-    cout << "y(" << j << ")\t" << output[i] << endl;
+    cout << "\nOutput: " <<endl;
+    for (int i = prevValue + countRecursive -1, j = prevValue; i < output.size(); i++, j++)
+    {
+      cout << "y(" << j << ")\t" << output[i] << endl;
+    }
+    cout <<endl;
   }
-  cout <<endl;
 }
 
 void LTI::OpenLog()
@@ -360,7 +411,7 @@ void LTI::FileWrite() //file write function
   }
   else if (!FN.empty())
   {
-    ofstream fileWrite(FN.c_str(), ios::out);
+    fileWrite.open(FN.c_str(), ios::out);
 
     fileWrite << 0 << " ";
     for(int i=countRecursive -1; i<output.size(); i++)
@@ -456,6 +507,7 @@ int main()
       cout << "Accepting input Signal..." <<endl;
       sample.inputSignal();
       sample.computeOutput();
+      sample.subMenu();
       sample.FileWrite();
       sample.prevValue = sample.output.size() - sample.countRecursive + 1;
     }
@@ -464,6 +516,7 @@ int main()
       cout << "Accepting Input INTERACTIVELY..." <<endl;
       sample.userInput();
       sample.computeOutput();
+      sample.subMenu();
       sample.FileWrite();
       sample.prevValue = sample.output.size() - sample.countRecursive + 1;
     }
