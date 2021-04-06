@@ -503,22 +503,6 @@ int main()
     }
     else if (myLTI.choice == 2)
     {
-      for(int i = 0; i<myLTI.aCoeff.size(); i++)
-      {
-        cout << i << " " << myLTI.aCoeff[i] <<endl;
-      }
-      cout << endl;
-      cout << "Size of aCoeff: " << myLTI.aCoeff.size() <<endl;
-      cout << "Size of bCoeff: " << myLTI.bCoeff.size() <<endl;
-      cout << "Count Recursive: " << myLTI.countRecursive <<endl;
-      cout << "Count NonRecursive: "<<myLTI.countNonRecursive <<endl;
-      cout << endl;
-      cout << "Output: " <<endl;
-      for(int i = 0; i<myLTI.output.size(); i++)
-      {
-        cout << i <<" "<< myLTI.output[i] <<endl;
-      }
-      cout <<endl;
       myLTI.full = 1;
       myLTI.PrintSpecs();
       myLTI.full = 0;
